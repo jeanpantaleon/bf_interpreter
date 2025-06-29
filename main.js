@@ -34,6 +34,8 @@ class Parser {
                 this.tokens.push(TOKEN.LOOP_START);
             } else if (/\]/g.test(char)) {
                 this.tokens.push(TOKEN.LOOP_END);
+            } else if (/\s|\t|\n/g.test(char)) {
+                continue;
             } else {
                 throw new Error(`Unknown token: ${char}`);
             }
@@ -45,8 +47,6 @@ class Parser {
         if(this.tokens[0] != TOKEN.LOOP_START) {
             return this.parseAction(this.tokens.shift())
         }
-
-        console.log("Starting loop")
     
         this.tokens.shift();
         let loopStart = this.pointerPosition;
@@ -61,7 +61,6 @@ class Parser {
             littlePosition++;
         }
         this.tokens = this.tokens.slice(loopEnd, this.tokens.length)
-        console.log(this.tokens)
     }
     
     parseAction = (token) => {
@@ -105,7 +104,7 @@ let i = 0;
 
 let parser = new Parser()
 
-parser.tokenize("");
+parser.tokenize("++[>+++++<-]  ");
 
 parser.interpret();
 parser.print();

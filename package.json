@@ -1,0 +1,19 @@
+{
+  "name": "bf_interpreter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeanpantaleon/bf_interpreter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeanpantaleon/bf_interpreter/issues"
+  },
+  "homepage": "https://github.com/jeanpantaleon/bf_interpreter#readme",
+  "description": ""
+}

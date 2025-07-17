@@ -5,7 +5,7 @@ export class Parser {
     tokens = [];
 
     pointerPosition = 0;
-    memorySize = 300;
+    memorySize = 30000;
     memory = Array(this.memorySize).fill(0);
 
     input = "";

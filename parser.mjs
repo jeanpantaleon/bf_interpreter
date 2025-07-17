@@ -1,4 +1,5 @@
 import { Token } from "./tokens.mjs";
+import { createInterface } from "readline";
 
 export class Parser {
     tokens = [];
@@ -6,6 +7,14 @@ export class Parser {
     pointerPosition = 0;
 	memorySize = 30;
     memory = Array(this.memorySize).fill(0);
+
+    input = "";
+    inputIndex = 0;
+
+    rl = createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
 
     tokenize = (input) => {
         let chars = input.split("");
@@ -26,6 +35,8 @@ export class Parser {
                 this.tokens.push(Token.LOOP_START);
             } else if (/\]/g.test(char)) {
                 this.tokens.push(Token.LOOP_END);
+            } else if (/\,/g.test(char)) {
+                this.tokens.push(Token.INPUT);
             }
         }
         return this.tokens;
@@ -91,7 +102,16 @@ export class Parser {
 					this.pointerPosition = this.memorySize - 1
                 break;
             case Token.RIGHT:
-                this.pointerPosition = ++this.pointerPosition % this.memorySize
+                this.pointerPosition = ++this.pointerPosition % this.memorySize;
+                break;
+            case Token.INPUT:
+                if (this.input.length <= this.inputIndex) {
+                    break;
+                }
+                this.memory[this.pointerPosition] = this.input.charCodeAt(
+                    this.inputIndex
+                );
+                this.inputIndex++;
                 break;
             case Token.DISPLAY:
                 console.log(this.memory[this.pointerPosition]);
@@ -101,13 +121,24 @@ export class Parser {
         return 1;
     };
 
-    interpret = () => {
-        let index = 0;
-        while (index < this.tokens.length) {
-            index += this.parseAction(this.tokens, index);
+    interpret = async () => {
+        if (this.tokens.find((v) => v == Token.INPUT) != undefined) {
+            this.rl.question("This programs requires an user input: ", (answer) => {
+                this.input = answer;
+                this.rl.close();
+                let index = 0;
+                while (index < this.tokens.length) {
+                    index += this.parseAction(this.tokens, index);
+                }
+                return this.memory;
+            });
+        } else {
+            let index = 0;
+            while (index < this.tokens.length) {
+                index += this.parseAction(this.tokens, index);
+            }
+            return this.memory;
         }
-
-        return this.memory;
     };
 
     printMemory = () => {

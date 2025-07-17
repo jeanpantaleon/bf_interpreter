@@ -7,4 +7,5 @@ export let Token;
     Token[(Token["DISPLAY"] = 4)] = "DISPLAY";
     Token[(Token["LOOP_START"] = 5)] = "LOOP_START";
     Token[(Token["LOOP_END"] = 6)] = "LOOP_END";
+    Token[(Token["INPUT"] = 7)] = "INPUT";
 })(Token || (Token = {}));

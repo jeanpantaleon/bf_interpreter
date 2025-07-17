@@ -139,6 +139,7 @@ export class Parser {
             while (index < this.tokens.length) {
                 index += this.parseAction(this.tokens, index);
             }
+            process.exit(0);
             return this.memory;
         }
     };

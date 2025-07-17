@@ -114,7 +114,9 @@ export class Parser {
                 this.inputIndex++;
                 break;
             case Token.DISPLAY:
-                console.log(this.memory[this.pointerPosition]);
+                process.stdout.write(
+                    String.fromCharCode(this.memory[this.pointerPosition])
+                );
                 break;
         }
 

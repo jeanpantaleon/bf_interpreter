@@ -1,8 +1,11 @@
 import { Parser } from "./parser.mjs";
+import { readFileSync } from "fs";
+
+let codeFile = readFileSync("./main.bf", {encoding: "utf-8" })
 
 let parser = new Parser();
 
-parser.tokenize("<-");
+parser.tokenize(codeFile);
 parser.interpret();
 
 parser.printMemory();

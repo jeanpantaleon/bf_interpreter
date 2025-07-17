@@ -123,7 +123,7 @@ class Parser {
         return this.memory;
     };
 
-    print = () => {
+    printMemory = () => {
         console.log(this.memory);
     };
 }
@@ -135,4 +135,4 @@ let parser = new Parser();
 parser.tokenize("++[>+++++[>+++++<-]<-]");
 
 parser.interpret();
-parser.print();
+parser.printMemory();

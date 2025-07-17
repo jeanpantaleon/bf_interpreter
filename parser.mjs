@@ -26,10 +26,6 @@ export class Parser {
                 this.tokens.push(Token.LOOP_START);
             } else if (/\]/g.test(char)) {
                 this.tokens.push(Token.LOOP_END);
-            } else if (/\s|\t|\n/g.test(char)) {
-                continue;
-            } else {
-                throw new Error(`Unknown token: ${char}`);
             }
         }
         return this.tokens;

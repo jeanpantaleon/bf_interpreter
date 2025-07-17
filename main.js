@@ -13,7 +13,8 @@ class Parser {
     tokens = [];
 
     pointerPosition = 0;
-    memory = Array(30).fill(0);
+	memorySize = 30;
+    memory = Array(this.memorySize).fill(0);
 
     tokenize = (input) => {
         let chars = input.split("");
@@ -99,9 +100,11 @@ class Parser {
                 break;
             case TOKEN.LEFT:
                 this.pointerPosition--;
+				if(this.pointerPosition < 0)
+					this.pointerPosition = this.memorySize - 1
                 break;
             case TOKEN.RIGHT:
-                this.pointerPosition++;
+                this.pointerPosition = ++this.pointerPosition % this.memorySize
                 break;
             case TOKEN.DISPLAY:
                 console.log(this.memory[this.pointerPosition]);

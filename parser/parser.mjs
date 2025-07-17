@@ -119,21 +119,24 @@ export class Parser {
                 );
                 break;
         }
-
         return 1;
     };
 
     interpret = async () => {
         if (this.tokens.find((v) => v == Token.INPUT) != undefined) {
-            this.rl.question("This programs requires an user input: ", (answer) => {
-                this.input = answer;
-                this.rl.close();
-                let index = 0;
-                while (index < this.tokens.length) {
-                    index += this.parseAction(this.tokens, index);
+            this.rl.question(
+                "This programs requires an user input: ",
+                (answer) => {
+                    this.input = answer;
+                    this.rl.close();
+
+                    let index = 0;
+                    while (index < this.tokens.length) {
+                        index += this.parseAction(this.tokens, index);
+                    }
+                    return this.memory;
                 }
-                return this.memory;
-            });
+            );
         } else {
             let index = 0;
             while (index < this.tokens.length) {

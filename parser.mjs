@@ -5,7 +5,7 @@ export class Parser {
     tokens = [];
 
     pointerPosition = 0;
-	memorySize = 30;
+    memorySize = 300;
     memory = Array(this.memorySize).fill(0);
 
     input = "";
@@ -98,8 +98,8 @@ export class Parser {
                 break;
             case Token.LEFT:
                 this.pointerPosition--;
-				if(this.pointerPosition < 0)
-					this.pointerPosition = this.memorySize - 1
+                if (this.pointerPosition < 0)
+                    this.pointerPosition = this.memorySize - 1;
                 break;
             case Token.RIGHT:
                 this.pointerPosition = ++this.pointerPosition % this.memorySize;

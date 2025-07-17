@@ -1,26 +1,26 @@
-let TOKEN
-(function(TOKEN) {
-    TOKEN[TOKEN["PLUS"] = 0] = "PLUS";
-    TOKEN[TOKEN["MINUS"] = 1] = "MINUS";
-    TOKEN[TOKEN["LEFT"] = 2] = "LEFT";
-    TOKEN[TOKEN["RIGHT"] = 3] = "RIGHT";
-    TOKEN[TOKEN["DISPLAY"] = 4] = "DISPLAY";
-    TOKEN[TOKEN["LOOP_START"] = 5] = "LOOP_START";
-    TOKEN[TOKEN["LOOP_END"] = 6] = "LOOP_END";
+let TOKEN;
+(function (TOKEN) {
+    TOKEN[(TOKEN["PLUS"] = 0)] = "PLUS";
+    TOKEN[(TOKEN["MINUS"] = 1)] = "MINUS";
+    TOKEN[(TOKEN["LEFT"] = 2)] = "LEFT";
+    TOKEN[(TOKEN["RIGHT"] = 3)] = "RIGHT";
+    TOKEN[(TOKEN["DISPLAY"] = 4)] = "DISPLAY";
+    TOKEN[(TOKEN["LOOP_START"] = 5)] = "LOOP_START";
+    TOKEN[(TOKEN["LOOP_END"] = 6)] = "LOOP_END";
 })(TOKEN || (TOKEN = {}));
 
 class Parser {
     tokens = [];
 
-    pointerPosition = 0;7
+    pointerPosition = 0;
     memory = Array(30).fill(0);
 
     tokenize = (input) => {
         let chars = input.split("");
-    
+
         while (chars.length > 0) {
             let char = chars.shift();
-            if(/\+/g.test(char)) {
+            if (/\+/g.test(char)) {
                 this.tokens.push(TOKEN.PLUS);
             } else if (/\-/g.test(char)) {
                 this.tokens.push(TOKEN.MINUS);
@@ -89,12 +89,13 @@ class Parser {
             case TOKEN.LOOP_START:
                 return this.parseLoop(tokenList, indexOfToken);
             case TOKEN.PLUS:
-                this.memory[this.pointerPosition] = ++this.memory[this.pointerPosition] % 255;
+                this.memory[this.pointerPosition] =
+                    ++this.memory[this.pointerPosition] % 255;
                 break;
             case TOKEN.MINUS:
                 this.memory[this.pointerPosition]--;
-                if(this.memory[this.pointerPosition] < 0)
-                    this.memory[this.pointerPosition] = 255
+                if (this.memory[this.pointerPosition] < 0)
+                    this.memory[this.pointerPosition] = 255;
                 break;
             case TOKEN.LEFT:
                 this.pointerPosition--;
@@ -115,21 +116,21 @@ class Parser {
         while (index < this.tokens.length) {
             index += this.parseAction(this.tokens, index);
         }
-    
+
         return this.memory;
-    }
+    };
 
     print = () => {
-        console.log(this.memory)
-    }
+        console.log(this.memory);
+    };
 }
 
 let i = 0;
 
-let parser = new Parser()
+let parser = new Parser();
 
-parser.tokenize("++[>+++++<-]  ");
+parser.tokenize("++[>+++++[>+++++<-]<-]");
 
 parser.interpret();
 parser.print();
-console.log(parser.pointerPosition)
+console.log(parser.pointerPosition);

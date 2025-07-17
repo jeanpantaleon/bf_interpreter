@@ -136,4 +136,3 @@ parser.tokenize("++[>+++++[>+++++<-]<-]");
 
 parser.interpret();
 parser.print();
-console.log(parser.pointerPosition);

@@ -41,30 +41,53 @@ class Parser {
             }
         }
         return this.tokens;
-    }
+    };
 
-    parseLoop = () => {
-        if(this.tokens[0] != TOKEN.LOOP_START) {
-            return this.parseAction(this.tokens.shift())
+    /**
+     * First function in the parsing tree
+     *
+     * @returns an int that represents the tokens eaten by the function
+     */
+    parseLoop = (tokenList, indexOfLoop) => {
+        if (tokenList[indexOfLoop] != TOKEN.LOOP_START) {
+            throw `Parsing loop with a bad token: ${tokenList[indexOfLoop]}`;
         }
-    
-        this.tokens.shift();
-        let loopStart = this.pointerPosition;
-        let loopEnd = 0;
-        let littlePosition = 0;
-        while(this.memory[loopStart] > 0 && this.tokens.length > 0) {
-            if(this.tokens[littlePosition] == TOKEN.LOOP_END) {
-                loopEnd = this.pointerPosition + littlePosition;
-                littlePosition = 0;
+
+        let loop_tokens = [];
+        let indexInLoop = 1;
+
+        let numberOfLoopInside = 0;
+
+        while (
+            tokenList[indexOfLoop + indexInLoop] != TOKEN.LOOP_END ||
+            numberOfLoopInside > 0
+        ) {
+            if (tokenList[indexOfLoop + indexInLoop] == TOKEN.LOOP_START) {
+                numberOfLoopInside++;
+            } else if (tokenList[indexOfLoop + indexInLoop] == TOKEN.LOOP_END) {
+                numberOfLoopInside--;
             }
-            this.parseAction(this.tokens[littlePosition]);
-            littlePosition++;
+            loop_tokens.push(tokenList[indexOfLoop + indexInLoop]);
+            indexInLoop++;
         }
-        this.tokens = this.tokens.slice(loopEnd, this.tokens.length)
-    }
-    
-    parseAction = (token) => {
-        switch(token) {
+
+        let localIndex = 0;
+        while (this.memory[this.pointerPosition] > 0) {
+            while (localIndex < loop_tokens.length) {
+                localIndex += this.parseAction(loop_tokens, localIndex);
+            }
+
+            localIndex = 0;
+        }
+
+        // + 2 because of the two [ and ] that are not included in the tokenList
+        return loop_tokens.length + 2;
+    };
+
+    parseAction = (tokenList, indexOfToken) => {
+        switch (tokenList[indexOfToken]) {
+            case TOKEN.LOOP_START:
+                return this.parseLoop(tokenList, indexOfToken);
             case TOKEN.PLUS:
                 this.memory[this.pointerPosition] = ++this.memory[this.pointerPosition] % 255;
                 break;
@@ -82,14 +105,15 @@ class Parser {
             case TOKEN.DISPLAY:
                 console.log(this.memory[this.pointerPosition]);
                 break;
-            case TOKEN.LOOP_START:
-                this.parseLoop();
         }
-    }
 
-    interpret = () => {    
-        while(this.tokens.length > 0) {
-            this.parseLoop();
+        return 1;
+    };
+
+    interpret = () => {
+        let index = 0;
+        while (index < this.tokens.length) {
+            index += this.parseAction(this.tokens, index);
         }
     
         return this.memory;

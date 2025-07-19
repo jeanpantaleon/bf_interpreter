@@ -13,7 +13,7 @@ if (process.argv.length > 3) {
         process.exit(1)
     }
 } else {
-    codeFile = readFileSync("./scripts/main.js", {encoding: "utf-8" })
+    codeFile = readFileSync("scripts/main.js", {encoding: "utf-8" })
 }
 
 
